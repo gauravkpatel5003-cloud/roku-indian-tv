@@ -1,0 +1,170 @@
+
+name: Update Indian TV Playlist
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 4 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download and organise channels
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          import urllib.request
+          from pathlib import Path
+
+          source = (
+              "https://raw.githubusercontent.com/"
+              "gnaidu05/iptv/main/playlists/"
+              "india-active.m3u"
+          )
+
+          req = urllib.request.Request(
+              source,
+              headers={"User-Agent": "Mozilla/5.0"}
+          )
+          with urllib.request.urlopen(req, timeout=45) as r:
+              data = r.read().decode("utf-8-sig")
+
+          if not data.lstrip().startswith("#EXTM3U"):
+              raise ValueError("Invalid M3U source")
+
+          lines = data.splitlines()
+          output = ["#EXTM3U"]
+          count = 0
+
+          def category(name, existing):
+              n = name.lower()
+              e = existing.lower()
+
+              if any(x in n for x in [
+                  "news", "samachar", "aaj tak",
+                  "abp", "ndtv", "republic", "tv9",
+                  "bharat24", "india today"
+              ]):
+                  return "News"
+              if any(x in n for x in [
+                  "sports", "sport", "cricket"
+              ]):
+                  return "Sports"
+              if any(x in n for x in [
+                  "movie", "cinema", "film", "gold"
+              ]):
+                  return "Movies"
+              if any(x in n for x in [
+                  "music", "beats", "9xm", "b4u music"
+              ]):
+                  return "Music"
+              if any(x in n for x in [
+                  "kids", "cartoon", "pogo", "junior"
+              ]):
+                  return "Kids"
+              if any(x in n for x in [
+                  "aastha", "bhajan", "devotional",
+                  "sanskar", "darshan"
+              ]):
+                  return "Religious"
+
+              groups = {
+                  "news": "News",
+                  "sports": "Sports",
+                  "movies": "Movies",
+                  "music": "Music",
+                  "kids": "Kids",
+                  "religious": "Religious",
+                  "entertainment": "Entertainment",
+                  "general": "General",
+                  "documentary": "Documentary",
+                  "education": "Education",
+                  "lifestyle": "Lifestyle",
+                  "animation": "Kids",
+                  "culture": "Culture",
+                  "cooking": "Lifestyle",
+                  "business": "Business",
+                  "travel": "Travel",
+                  "comedy": "Entertainment",
+              }
+              for part in re.split(r"[;,|]", e):
+                  if part.strip() in groups:
+                      return groups[part.strip()]
+              return "General"
+
+          for i, line in enumerate(lines):
+              if not line.startswith("#EXTINF:"):
+                  continue
+
+              if "," not in line:
+                  continue
+
+              name = line.split(",", 1)[1].strip()
+              match = re.search(
+                  r'group-title="([^"]*)"', line
+              )
+              old = match.group(1) if match else ""
+              group = category(name, old)
+
+              if match:
+                  line = re.sub(
+                      r'group-title="[^"]*"',
+                      f'group-title="{group}"',
+                      line,
+                      count=1
+                  )
+              else:
+                  pos = line.find(",")
+                  line = (
+                      line[:pos]
+                      + f' group-title="{group}"'
+                      + line[pos:]
+                  )
+
+              extras = []
+              url = None
+              for following in lines[i + 1:]:
+                  following = following.strip()
+                  if following.startswith("#EXTINF:"):
+                      break
+                  if following.startswith("#"):
+                      extras.append(following)
+                  elif following:
+                      url = following
+                      break
+
+              if url and url.startswith(("http://", "https://")):
+                  output.append(line)
+                  output.extend(extras)
+                  output.append(url)
+                  count += 1
+
+          if count < 100:
+              raise ValueError(
+                  f"Too few channels: {count}"
+              )
+
+          Path("india-tv.m3u").write_text(
+              "\n".join(output) + "\n",
+              encoding="utf-8"
+          )
+          print(f"Published {count} channels")
+          PY
+
+      - name: Commit updated playlist
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add india-tv.m3u
+          if ! git diff --cached --quiet; then
+            git commit -m "Automatically update Indian TV playlist"
+            git push
+          fi
