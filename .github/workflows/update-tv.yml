@@ -13,92 +13,36 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download and organise channels
+      - name: Generate organised playlists
         shell: bash
         run: |
           python3 - <<'PY'
           import re
           import urllib.request
           from pathlib import Path
+          from collections import defaultdict
 
-          source = (
+          SOURCE = (
               "https://raw.githubusercontent.com/"
               "gnaidu05/iptv/main/playlists/"
               "india-active.m3u"
           )
 
-          req = urllib.request.Request(
-              source,
+          request = urllib.request.Request(
+              SOURCE,
               headers={"User-Agent": "Mozilla/5.0"}
           )
-          with urllib.request.urlopen(req, timeout=45) as r:
-              data = r.read().decode("utf-8-sig")
+          with urllib.request.urlopen(request, timeout=60) as r:
+              content = r.read().decode("utf-8-sig")
 
-          if not data.lstrip().startswith("#EXTM3U"):
-              raise ValueError("Invalid M3U source")
+          if not content.lstrip().startswith("#EXTM3U"):
+              raise ValueError("Source is not an M3U playlist")
 
-          lines = data.splitlines()
-          output = ["#EXTM3U"]
-          count = 0
-
-          def category(name, existing):
-              n = name.lower()
-              e = existing.lower()
-
-              if any(x in n for x in [
-                  "news", "samachar", "aaj tak",
-                  "abp", "ndtv", "republic", "tv9",
-                  "bharat24", "india today"
-              ]):
-                  return "News"
-              if any(x in n for x in [
-                  "sports", "sport", "cricket"
-              ]):
-                  return "Sports"
-              if any(x in n for x in [
-                  "movie", "cinema", "film", "gold"
-              ]):
-                  return "Movies"
-              if any(x in n for x in [
-                  "music", "beats", "9xm", "b4u music"
-              ]):
-                  return "Music"
-              if any(x in n for x in [
-                  "kids", "cartoon", "pogo", "junior"
-              ]):
-                  return "Kids"
-              if any(x in n for x in [
-                  "aastha", "bhajan", "devotional",
-                  "sanskar", "darshan"
-              ]):
-                  return "Religious"
-
-              groups = {
-                  "news": "News",
-                  "sports": "Sports",
-                  "movies": "Movies",
-                  "music": "Music",
-                  "kids": "Kids",
-                  "religious": "Religious",
-                  "entertainment": "Entertainment",
-                  "general": "General",
-                  "documentary": "Documentary",
-                  "education": "Education",
-                  "lifestyle": "Lifestyle",
-                  "animation": "Kids",
-                  "culture": "Culture",
-                  "cooking": "Lifestyle",
-                  "business": "Business",
-                  "travel": "Travel",
-                  "comedy": "Entertainment",
-              }
-              for part in re.split(r"[;,|]", e):
-                  if part.strip() in groups:
-                      return groups[part.strip()]
-              return "General"
+          lines = content.splitlines()
+          channels = []
 
           for i, line in enumerate(lines):
               if not line.startswith("#EXTINF:"):
@@ -111,13 +55,120 @@ jobs:
               match = re.search(
                   r'group-title="([^"]*)"', line
               )
-              old = match.group(1) if match else ""
-              group = category(name, old)
+              original_group = (
+                  match.group(1) if match else ""
+              )
 
-              if match:
+              url = None
+              extras = []
+
+              for following in lines[i + 1:]:
+                  following = following.strip()
+                  if following.startswith("#EXTINF:"):
+                      break
+                  if following.startswith("#"):
+                      extras.append(following)
+                  elif following:
+                      url = following
+                      break
+
+              if not url or not url.startswith(
+                  ("https://", "http://")
+              ):
+                  continue
+
+              channels.append(
+                  (name, line, extras, url, original_group)
+              )
+
+          if len(channels) < 100:
+              raise ValueError(
+                  f"Unexpected channel count: {len(channels)}"
+              )
+
+          def classify(name, original):
+              n = name.lower()
+              g = original.lower()
+
+              rules = [
+                  ("News", [
+                      "news", "samachar", "aaj tak",
+                      "aajtak", "ndtv", "republic",
+                      "abp", "tv9", "cnn", "bbc",
+                      "india today", "cnbc", "zee 24",
+                      "sandesh", "v6 news"
+                  ]),
+                  ("Sports", [
+                      "sports", "sport", "cricket",
+                      "football", "tennis", "espn"
+                  ]),
+                  ("Movies", [
+                      "movies", "movie", "cinema",
+                      "film", "pictures", "cineplex",
+                      "star gold", "sony max"
+                  ]),
+                  ("Kids", [
+                      "kids", "cartoon", "pogo",
+                      "nickelodeon", "disney junior",
+                      "hungama", "sonic", "baby tv"
+                  ]),
+                  ("Music", [
+                      "music", "9xm", "beats",
+                      "b4u music", "mtv", "zing"
+                  ]),
+                  ("Religious", [
+                      "aastha", "bhajan", "sanskar",
+                      "devotional", "darshan",
+                      "spiritual", "temple", "god tv"
+                  ]),
+                  ("Entertainment", [
+                      "entertainment", "star plus",
+                      "star bharat", "star jalsha",
+                      "star maa", "star pravah",
+                      "star vijay", "sony sab",
+                      "sony tv", "colors", "zee tv",
+                      "serial", "comedy", "drama"
+                  ])
+              ]
+
+              for category, keywords in rules:
+                  if any(k in n for k in keywords):
+                      return category
+
+              mapping = {
+                  "news": "News",
+                  "sports": "Sports",
+                  "movies": "Movies",
+                  "music": "Music",
+                  "kids": "Kids",
+                  "animation": "Kids",
+                  "religious": "Religious",
+                  "entertainment": "Entertainment",
+                  "comedy": "Entertainment",
+                  "general": "General",
+                  "documentary": "Documentary",
+                  "education": "Education",
+                  "lifestyle": "Lifestyle",
+                  "business": "Business",
+                  "cooking": "Lifestyle",
+                  "travel": "Travel",
+                  "culture": "Culture"
+              }
+
+              for part in re.split(r"[;,|]", g):
+                  part = part.strip()
+                  if part in mapping:
+                      return mapping[part]
+
+              return "General"
+
+          def make_entry(channel, group):
+              name, line, extras, url, _ = channel
+
+              if re.search(r'group-title="[^"]*"', line):
                   line = re.sub(
                       r'group-title="[^"]*"',
-                      f'group-title="{group}"',
+                      lambda m: f'group-title="{group}"',
                       line,
                       count=1
                   )
@@ -129,42 +180,77 @@ jobs:
                       + line[pos:]
                   )
 
-              extras = []
-              url = None
-              for following in lines[i + 1:]:
-                  following = following.strip()
-                  if following.startswith("#EXTINF:"):
-                      break
-                  if following.startswith("#"):
-                      extras.append(following)
-                  elif following:
-                      url = following
-                      break
+              return [line, *extras, url]
 
-              if url and url.startswith(("http://", "https://")):
-                  output.append(line)
-                  output.extend(extras)
-                  output.append(url)
-                  count += 1
+          playlists = defaultdict(list)
 
-          if count < 100:
-              raise ValueError(
-                  f"Too few channels: {count}"
+          for channel in channels:
+              name, _, _, _, old_group = channel
+              group = classify(name, old_group)
+
+              playlists["india-tv"].append(
+                  make_entry(channel, group)
               )
 
-          Path("india-tv.m3u").write_text(
-              "\n".join(output) + "\n",
-              encoding="utf-8"
-          )
-          print(f"Published {count} channels")
+              slug = group.lower().replace(" ", "-")
+              playlists[slug].append(
+                  make_entry(channel, group)
+              )
+
+              # Language-specific collections are
+              # additional playlists, not exclusive groups.
+              name_lower = name.lower()
+              old_lower = old_group.lower()
+
+              if (
+                  re.search(
+                      r'\b(gujarati|guj|gu)\b',
+                      name_lower + " " + old_lower
+                  )
+                  or any(x in name_lower for x in [
+                      "gujarat", "gujarati", "asmita",
+                      "girnar", "sandesh"
+                  ])
+              ):
+                  playlists["gujarati"].append(
+                      make_entry(channel, "Gujarati")
+                  )
+
+              if re.search(
+                  r'\b(hindi|hin)\b',
+                  name_lower + " " + old_lower
+              ):
+                  playlists["hindi"].append(
+                      make_entry(channel, "Hindi")
+                  )
+
+          for slug, entries in sorted(playlists.items()):
+              output = ["#EXTM3U"]
+
+              for entry in entries:
+                  output.extend(entry)
+
+              filename = (
+                  "india-tv.m3u"
+                  if slug == "india-tv"
+                  else f"india-{slug}.m3u"
+              )
+
+              Path(filename).write_text(
+                  "\n".join(output) + "\n",
+                  encoding="utf-8"
+              )
+              print(filename, len(entries))
+
+          print("Total channels:", len(channels))
           PY
 
-      - name: Commit updated playlist
+      - name: Commit playlists
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add india-tv.m3u
+          git add -- '*.m3u'
           if ! git diff --cached --quiet; then
-            git commit -m "Automatically update Indian TV playlist"
+            git commit -m "Update organised Indian TV playlists"
             git push
           fi
