@@ -21,3 +21,5 @@ https://2-fss-2.streamhoster.com/pl_120/206508-3261972-1/playlist.m3u8
 https://yuppmedtaorire.akamaized.net/v1/master/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/flowers_nim_https/050522/flowers/playlist.m3u8
 #EXTINF:-1 tvg-id="DDBharati.in@SD" tvg-logo="https://i.imgur.com/4tfUIEo.png" group-title="Culture",DD Bharati (720p)
 https://cdn.pishow.tv/ott/live/10/master.m3u8
+#EXTINF:-1 tvg-id="ImaiTV.lk@SD" tvg-logo="https://i.imgur.com/9tODclu.png" group-title="Culture",Imai TV (576i)
+https://jalworldiptv.vercel.app/iptv/imaitv/playlist.m3u8

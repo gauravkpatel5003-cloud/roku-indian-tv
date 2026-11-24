@@ -14,6 +14,8 @@ https://d2lk5u59tns74c.cloudfront.net/out/v1/f913cf893c594f73b114216e74a2efbc/in
 https://stream.ottlive.co.in/punjabihits/index.m3u8
 #EXTINF:-1 tvg-id="QelloConcertsbyStingray.ca@SD" tvg-logo="https://i.imgur.com/IRyFTWq.png" group-title="Music",Qello Concerts by Stingray (1080p)
 https://lotus.stingray.com/manifest/qello-qello001-montreal/samsungtvplus/master.m3u8
+#EXTINF:-1 tvg-id="RajMusixTamil.in@SD" tvg-logo="https://xstreamcp-assets-msp.streamready.in/assets/LIVETV/LIVECHANNEL/LIVETV_LIVETVCHANNEL_RAJ_MUSIX_TAMIL/images/LOGO_HD/image.png" group-title="Music",Raj Musix Tamil (1080p)
+https://livestream.rajtv.tv/hlslive/Admin/px08241087/live/Raj_Musix/master_1.m3u8
 #EXTINF:-1 tvg-id="SanaPlus.in@SD" tvg-logo="https://i.imgur.com/N6tKUZv.png" group-title="Music",Sana Plus (1080p)
 https://mumbai-edge.smartplaytv.in/SanaPlusHD/index.m3u8
 #EXTINF:-1 tvg-id="SteelbirdMusic.in@SD" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Steelbird_Music.png" group-title="Music",Steelbird Music (720p) [Not 24/7]
@@ -130,3 +132,7 @@ https://samitaorigin.tangotv.in/PUNJABIMUSICHD/SAMITAORIGIN/index.m3u8
 https://stream.ottlive.co.in/zingabad/index.m3u8
 #EXTINF:-1 tvg-id="WahPunjabi.in@SD" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Wah_Punjabi.png" group-title="Music",Wah Punjabi (720p)
 https://yuppnimrestreammum.akamaized.net/181224/smil:wahpunjabi.smil/playlist.m3u8?hdnts=st=1735898689~exp=1835898688~acl=*~hmac=f5fe24724fe05481e3841f9eb5ab8efdee0a3dd83645ae9dcf45703f525bab7b
+#EXTINF:-1 tvg-id="HareKrsnaMusic.in@SD" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Hare_Krsna_music.png" group-title="Music",Hare Krsna Music (1080p)
+https://d1y1fq5zo7b6pt.cloudfront.net/v1/master/071c0467fcd02420cdf0d8a1ca3524b96c27a151/hkmusic/HKTV/HKMusic/playlist.m3u8
+#EXTINF:-1 tvg-id="PunjabiBeatsHD.in@HD" tvg-logo="https://i.imgur.com/1Za9gNQ.jpg" group-title="Music",Punjabi Beats HD (576p)
+https://mumt01.tangotv.in/O5aw8Zn3STVHARYANANEWS/index.m3u8

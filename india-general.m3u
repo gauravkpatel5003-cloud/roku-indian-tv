@@ -47,8 +47,8 @@ https://janya-digimix.akamaized.net/vglive-sk-955415/russia/ngrp:angelrussia_all
 https://janya-digimix.akamaized.net/vglive-sk-351398/spanish/ngrp:angelspanish_all/playlist.m3u8
 #EXTINF:-1 tvg-id="AnjanTV.in@SD" group-title="General",Anjan TV (720p)
 https://anjan.vstream.online/anjanorg/ngrp:anjan_hdall/playlist.m3u8
-#EXTINF:-1 tvg-id="ApnaPunjabTV.ca@SD" group-title="General",Apna Punjab TV (720p)
-https://plus.gigabitcdn.net/live-stream/apna-punjab-H3sE/playlist.m3u8
+#EXTINF:-1 tvg-id="ApnaPunjabTV.in@SD" tvg-logo="https://www.apnapunjab.tv/images/logo.png" group-title="General",Apna Punjab TV (India) (576p)
+https://samitaorigin.tangotv.in/APNAPUNJAB/SAMITAORIGIN/index.m3u8
 #EXTINF:-1 tvg-id="ArputharYesuTV.in@SD" group-title="General",Arputhar Yesu TV (720p)
 https://arputharyesutv.arputharyesutv.com/live/md/index.m3u8
 #EXTINF:-1 tvg-id="AwaazIndiaTV.in@SD" group-title="General",Awaaz India TV (720p) [Not 24/7]
@@ -61,8 +61,6 @@ https://cdnb4u.wiseplayout.com/B4U_Bhojpuri/master.m3u8
 https://feeds.intoday.in/bttv/itgd.m3u8
 #EXTINF:-1 tvg-id="CCV.in@SD" group-title="General",CCV (480p)
 https://5a1178b42cc03.streamlock.net/8212/8212/playlist.m3u8
-#EXTINF:-1 tvg-id="ChannelDivya.in@SD" group-title="General",Channel Divya (1080p)
-https://vg-pitaaratvlive.akamaized.net/v1/vglive-sk-906482/playlist.m3u8
 #EXTINF:-1 tvg-id="ChardiklaGurbaaniTV.in@SD" group-title="General",Chardikla Gurbaani TV (1080p)
 https://chardikalatimestv.gigabitcdn.net/in-chardikala/chardikala-gurbani-tv/playlist.m3u8
 #EXTINF:-1 tvg-id="ChardiklaTimeTV.in@SD" group-title="General",Chardikla Time TV (1080p)
@@ -287,8 +285,6 @@ https://amg00627-amg00627c16-samsung-nz-2811.playouts.now.amagi.tv/playlist/amg0
 https://amg00627-banijaygroup-fearfactor-samsungau-9vdod.amagi.tv/playlist/amg00627-banijaygroup-fearfactor-samsungau/playlist.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/mowSfj6.png" group-title="General",Cold Case Files
 https://aegis-cloudfront-1.tubi.video/1e764712-0649-4946-bd7e-f1bbba3be6fa/playlist.m3u8
-#EXTINF:-1 tvg-logo="https://i.imgur.com/KBTqpJ7.png" group-title="General",Johnny Carson TV
-https://aegis-cloudfront-1.tubi.video/475550ae-8708-46a5-a7c3-54acb3d91480/playlist.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/nrVLyE6.png" group-title="General",This Old House
 https://thisoldhouse-2-us.roku.wurl.tv/playlist.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/Brry7cZ.png" group-title="General",PBS Nature
@@ -312,3 +308,7 @@ https://fta.ektv.in/live/623/master.m3u8
 #EXTINF:-1 tvg-id="TV2.my@SD" tvg-logo="https://i.imgur.com/LGEdeyJ.png" http-referrer="https://rtm-player.glueapi.io/" group-title="General",TV2 (Malaysia) (1080p)
 #EXTVLCOPT:http-referrer=https://rtm-player.glueapi.io/
 https://d25tgymtnqzu8s.cloudfront.net/smil:tv2/playlist.m3u8?id=2
+#EXTINF:-1 tvg-id="ParvasiTV.in@HD" tvg-logo="https://d229kpbsb5jevy.cloudfront.net/yupptvnew/content/common/channel/logos/ajzsbi.png" group-title="General",Parvasi TV (720p)
+https://yuppnimrestreammum.akamaized.net/181224/smil:pravasi.smil/playlist.m3u8?hdnts=st=1735898689~exp=1835898688~acl=*~hmac=f5fe24724fe05481e3841f9eb5ab8efdee0a3dd83645ae9dcf45703f525bab7b
+#EXTINF:-1 tvg-id="ViiMEDIA.in@SD" tvg-logo="https://yt3.googleusercontent.com/UYTVPDOHTs9b-v1h2pAUHC_e8I_QRTUITTutft_5hOGC2YLL2-jtgD0xaSWZGOfWjmXKjL3AexE=s1200" group-title="General",Vii MEDIA (1080p)
+https://viimedia.akamaized.net/viimedia/master.m3u8

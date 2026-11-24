@@ -49,3 +49,5 @@ https://dl74gpgmnb7i8.cloudfront.net/pocketwatch_GameOn.m3u8
 https://streams2.sofast.tv/v1/master/611d79b11b77e2f571934fd80ca1413453772ac7/04072b68-dc6a-4d5e-98af-f356ba8d5063/playlist.m3u8
 #EXTINF:-1 tvg-id="GreenGoldTV.in@India" tvg-logo="https://i.ibb.co/TDPsPVkT/Greengoldtv.png" group-title="Kids",Green Gold TV (1080p)
 https://cc-szrmqvu8zkg16.akamaized.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-szrmqvu8zkg16/greengold/stream/grngld/playlist.m3u8
+#EXTINF:-1 tvg-id="SonyYay.in@SD" tvg-logo="https://dtil.tmsimg.com/assets/s159100_ld_h15_aa.png?lock=720x540" group-title="Kids",Sony Yay! (1080p)
+https://r2.amml.in/sony-yay/live.m3u8
